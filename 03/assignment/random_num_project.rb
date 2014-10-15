@@ -128,6 +128,10 @@ while main_loop_running
 	guessed = false
 	total_guesses = total_guesses.to_i	
 	while !guessed
+		if total_guesses == 0
+			puts "You lose! I win! Womp womp!"  
+			guessed = true
+	  else	 
 	  puts "Guess the Magic Number!"
 	  prompt = $stdin.gets.chomp
 		checking = true
@@ -140,19 +144,20 @@ while main_loop_running
 				prompt = $stdin.gets.chomp
 			end
 		end				  
-		if total_guesses == 0
-			puts "You lose! I win! Womp womp!"  
-			guessed = true
-	  else	  
+ 
 	  	prompt = prompt.to_i
-			if prompt == random_number && total_guesses > 1
+			if prompt == random_number && total_guesses > 0
 				puts "NAILED IT!!! The number was #{random_number}!"
 				guessed = true
-			elsif prompt > random_number && total_guesses > 1
+			elsif prompt > random_number && total_guesses > 0
 				puts "Too high!"
 				total_guesses = total_guesses - 1
-				puts "Total guesses left is now at #{total_guesses}"
-			elsif prompt < random_number && total_guesses > 1
+				if total_guesses == 1
+					puts "Last chance Buddy..."
+				else
+					puts "Total guesses left is now at #{total_guesses}"
+				end
+			elsif prompt < random_number && total_guesses > 0
 				puts "Too low!"
 				total_guesses = total_guesses - 1
 				if total_guesses == 1
