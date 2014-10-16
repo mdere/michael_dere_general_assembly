@@ -122,7 +122,14 @@ while main_loop_running
 	end
 
 	# Generate Random Number
-	random_number = rand(max.to_i)
+	generating = true
+	puts "Generating Number..."
+	while generating
+		random_number = rand(max.to_i)
+		if random_number >= min.to_i
+		  generating = false
+		end
+	end
 
 	# Playing the game now, guess number
 	guessed = false
