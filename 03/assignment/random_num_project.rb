@@ -105,32 +105,26 @@ while main_loop_running
 				end
 			end			  
 		  if max.to_i <= min.to_i
-			puts "You may not do that, choose a number higher than #{min}" 
+				puts "You may not do that, choose a number higher than #{min}" 
 		  else
-			puts "You set upper threshold to be #{max}"
-			max_is_set = true
-			waiting = false
+				puts "You set upper threshold to be #{max}"
+				max_is_set = true
+				waiting = false
 		  end
 		end
 	  elsif (prompt == "n" || prompt == "no") && !lower_overrided
-		max = 10
-		puts "defaulted upper threshold is #{max}"
-		waiting = false
+			max = 10
+			puts "defaulted upper threshold is #{max}"
+			waiting = false
 	  else
-		puts "Incorrect input or you need to override upper threshold"    
+			puts "Incorrect input or you need to override upper threshold"    
 	  end
 	end
 
 	# Generate Random Number
-	generating = true
 	puts "Generating Number..."
-	while generating
-		random_number = rand(max.to_i)
-		if random_number >= min.to_i
-		  generating = false
-		end
-	end
-
+  random_number = rand(min.to_i..max.to_i)
+  
 	# Playing the game now, guess number
 	guessed = false
 	total_guesses = total_guesses.to_i	
