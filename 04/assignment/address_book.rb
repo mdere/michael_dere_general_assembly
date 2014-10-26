@@ -9,6 +9,20 @@ def get_user_name( filename )
 	user_name = file.split('-')[0].strip
 end
 
+def list_files
+	list_of_files = `ls ./address_files/`.split("\n")
+	index = 0
+	list_of_files.each do |file|
+		puts "[#{index}] #{file}"
+		index += 1
+	end
+end
+
+def get_file_name(index)
+	list_of_files = `ls ./address_files/`.split("\n")	
+	file_name = list_of_files[index.to_i]
+end
+
 def display_menu
 	puts ""
 	puts "Select the following:"
@@ -180,14 +194,26 @@ if !`ls ./address_files/`.empty?
 	  		while choosing
 		  		puts "Here are the list of address files"
 				puts ""
-				puts `ls ./address_files/`
+				list_files()
 				puts ""
 				puts "Please choose a file."
-				file_name = $stdin.gets.chomp.downcase
-				if !`ls ./address_files/ | grep #{file_name}`.empty? 
+				file_name_index = $stdin.gets.chomp
+				checking_prompt = true
+				while checking_prompt
+					checking_prompt = check_num_prompt(file_name_index)
+					if checking_prompt
+						puts "Sorry, there are no selection for #{file_name_index}"
+						list_files()
+						file_name_index = $stdin.gets.chomp
+					end
+				end
+				if !`ls ./address_files/ | grep #{get_file_name(file_name_index)}`.empty? 
+					file_name = get_file_name(file_name_index)
 					addresses = load_user_address_book( file_name )
 					user_name = get_user_name( file_name )
-					puts user_name
+					puts ""
+					puts "Welcome Back #{user_name.capitalize}!"
+					puts ""
 					choosing = false
 				else
 					puts "File does not exist...please select again"
