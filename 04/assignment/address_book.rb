@@ -78,7 +78,7 @@ def display_update_entry(address_index, address_list)
 	puts "[2] Last Name?"
 	puts "[3] Phone Number?"
 	i = 1
-	working_index.each do |key|
+	working_index.keys.each do |key|
 		if key.include? "email"
 			puts "[#{3 + i}] #{key.capitalize}?"
 			i += 1
@@ -111,14 +111,14 @@ def update_entry(address_index, address_list)
 			working_index['last_name'] = last_name
 			puts "Updated Last Name!"		
 		elsif prompt.to_i == 3
-			puts  "Updating First Name..."
+			puts  "Updating Phone Number..."
 			phone_number = $stdin.gets.chomp
 			working_index['phone_number'] = phone_number
 			puts "Updated Phone Number!"		
 		elsif prompt.to_i > 3
 			puts  "Updating Email #{prompt}..."
 			email = $stdin.gets.chomp
-			working_index['email_#{prompt}'] = email
+			working_index["email_#{prompt.to_i-3}"] = email
 			puts "Updated Email #{prompt}!"		
 		else
 			puts "Select correct Value."
