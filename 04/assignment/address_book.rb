@@ -57,10 +57,75 @@ def create_entry(first_name, last_name, phone_number, addresses)
 	addresses.push hash
 end
 
+def display_update_entry(address_index, address_list)
+	working_index = address_list[address_index]
+	puts "What do you want to update?"
+	puts "[1] First Name?"
+	puts "[2] Last Name?"
+	puts "[3] Phone Number?"
+	i = 1
+	working_index.each do |key|
+		if key.include? "email"
+			puts "[#{3 + i}] #{key.capitalize}?"
+			i += 1
+		end
+	end
+end
+
+def update_entry(address_index, address_list)
+	display_update_entry(address_index, address_list)
+	working_index = address_list[address_index]
+	updating = true
+	while updating
+		prompt = $stdin.gets.chomp
+		checking_prompt = true
+		while checking_prompt
+			checking_prompt = check_num_prompt(prompt)
+			if checking_prompt
+				puts "Please choose the correct value."
+				prompt = $stdin.gets.chomp
+			end
+		end
+		if prompt.to_i == 1
+			puts  "Updating First Name..."
+			first_name = $stdin.gets.chomp
+			working_index['first_name'] = first_name
+			puts "Updated First Name!"
+		elsif prompt.to_i == 2
+			puts  "Updating Last Name..."
+			last_name = $stdin.gets.chomp
+			working_index['last_name'] = last_name
+			puts "Updated Last Name!"		
+		elsif prompt.to_i == 3
+			puts  "Updating First Name..."
+			phone_number = $stdin.gets.chomp
+			working_index['phone_number'] = phone_number
+			puts "Updated Phone Number!"		
+		elsif prompt.to_i > 3
+			puts  "Updating Email #{prompt}..."
+			email = $stdin.gets.chomp
+			working_index['email_#{prompt}'] = email
+			puts "Updated Email #{prompt}!"		
+		else
+			puts "Select correct Value."
+		end
+		puts "Want to update another parameter?"
+		prompt_dec = $stdin.gets.chomp
+		if prompt_dec == 'y' || prompt_dec == 'yes'
+			display_update_entry(address_index, address_list)
+		elsif prompt_dec == 'n' || prompt_dec == 'no'
+			puts "Returning to the Menu."
+			updating = false
+		else
+			puts "Please Yes or No. Thanks."	
+		end
+	end
+end
+
 def display_entries(addresses)
-	addresses.sort do |a,b|
-	  (b['last_name'] <=> a['last_name']).nonzero? ||
-	  (a['first_name'] <=> b['first_name'])
+	addresses.sort! do |a,b|
+	  (a['first_name'] <=> b['first_name']) &&
+	  (a['last_name'] <=> b['last_name'])
 	end
 	addresses.size.times do |address_index|
 		first_name = addresses[address_index]['first_name']
@@ -109,7 +174,7 @@ if !`ls ./address_files/`.empty?
 	puts "Do you want to load an existing address file? (y/n)"
 	checking_prompt = true
 	while checking_prompt
-		prompt= $stdin.gets.chomp.downcase	
+		prompt = $stdin.gets.chomp.downcase	
 	  	if prompt == 'y' || prompt == 'yes'
 	  		choosing = true
 	  		while choosing
@@ -168,10 +233,10 @@ while is_running
 			checking_prompt = true
 			choosing_index = true
 			while choosing_index
-			display_entries(addresses)
-			puts ""
-			puts "Please select number associated to the entry you want to view"
-			prompt = $stdin.gets.chomp
+				display_entries(addresses)
+				puts ""
+				puts "Please select number associated to the entry you want to view"
+				prompt = $stdin.gets.chomp
 				while checking_prompt
 					checking_prompt = check_num_prompt(prompt)
 					if checking_prompt
@@ -187,10 +252,27 @@ while is_running
 				else
 					puts "Incorrect selection, please try again"
 				end
+				puts "Do you want to update this selection too? (y/n)"
+				waiting_for_update = true
+				while waiting_for_update
+					prompt = $stdin.gets.chomp.downcase	
+					if prompt == 'y' || prompt == 'yes'
+						update_entry(index, addresses)
+						waiting_for_update = false
+					elsif prompt == 'n' || prompt == 'no'
+						puts "Returning to the Menu."
+						waiting_for_update = false
+					else
+						puts "Please input Yes or No. Thank you."
+					end
+				end			  		
 			end
-		else
-			puts "Nothing to view...Please Create New Entry."
-		end
+			checking_prompt = false
+	  	elsif prompt == 'n' || prompt == 'no'
+	  		checking_prompt = false
+	  	else
+	  		puts "Please input Yes or No. Thank you."
+	  	end
 	elsif prompt == "3"
 		puts "You have selected [3] to delete an entry."
 		if addresses.any?
