@@ -23,6 +23,14 @@ def get_file_name(index)
 	file_name = list_of_files[index.to_i]
 end
 
+def display_application_header
+	puts "#####################################"
+	puts "### Welcome to The Address Finder ###"
+	puts "#####################################"
+	puts "Brought to you by Michael Dere"
+	puts ""
+end
+
 def display_menu
 	puts ""
 	puts "Select the following:"
@@ -87,8 +95,31 @@ def display_update_entry(address_index, address_list)
 end
 
 def update_entry(address_index, address_list)
-	display_update_entry(address_index, address_list)
 	working_index = address_list[address_index]
+	if !working_index.keys.any? { |s| s.include?('email') }
+		puts "No email detected, do you want to add one?"
+		deciding = true
+		i = 1
+		while deciding
+			prompt = $stdin.gets.chomp				
+			if prompt == 'y' || prompt == 'yes'
+		  		puts "Enter email address, please."
+		  		email_prompt = $stdin.gets.chomp
+		  		puts ""
+		  		puts "Adding #{email_prompt}"
+		  		puts ""
+		  		working_index["email_#{i}"] = email_prompt
+		  		i += 1
+		  		puts ""
+		  		puts "Want to add another one?"
+		  	elsif prompt == 'n' || prompt == 'no'
+		  		deciding = false
+		  	else
+		  		puts "Invalid, please try again."
+		  	end	
+	 	end	
+	 end
+	display_update_entry(address_index, address_list)
 	updating = true
 	while updating
 		prompt = $stdin.gets.chomp
@@ -102,21 +133,25 @@ def update_entry(address_index, address_list)
 		end
 		if prompt.to_i == 1
 			puts  "Updating First Name..."
+			puts "Input new first name."
 			first_name = $stdin.gets.chomp
 			working_index['first_name'] = first_name
 			puts "Updated First Name!"
 		elsif prompt.to_i == 2
 			puts  "Updating Last Name..."
+			puts "Input new last name."
 			last_name = $stdin.gets.chomp
 			working_index['last_name'] = last_name
 			puts "Updated Last Name!"		
 		elsif prompt.to_i == 3
-			puts  "Updating Phone Number..."
+			puts "Updating Phone Number..."
+			puts "Input new phone number."
 			phone_number = $stdin.gets.chomp
 			working_index['phone_number'] = phone_number
 			puts "Updated Phone Number!"		
 		elsif prompt.to_i > 3
-			puts  "Updating Email #{prompt}..."
+			puts "Updating Email #{prompt}..."
+			puts "Input new email address."
 			email = $stdin.gets.chomp
 			working_index["email_#{prompt.to_i-3}"] = email
 			puts "Updated Email #{prompt}!"		
@@ -167,9 +202,17 @@ def delete_entries(entry_index, addresses)
 	addresses.delete_at(entry_index)
 end
 
+def save_address_book(user, addresses)
+	puts "Saving Address Book..."
+	File.open("./address_files/#{user}-address_book.json","w") do |f|
+  		f.write(addresses.to_json)
+	end
+end
+
 # Array of address books
 addresses = []
 user_name = ""
+display_application_header
 puts "Do you want to start a new address book?"
 checking_prompt = true
 while checking_prompt
@@ -179,54 +222,55 @@ while checking_prompt
   		user_name = $stdin.gets.chomp.downcase.tr(" ", "_")
   		checking_prompt = false
   	elsif prompt == 'n' || prompt == 'no'
+		 if !`ls ./address_files/`.empty?
+			puts "Do you want to load an existing address file? (y/n):"
+			checking_prompt = true
+			while checking_prompt
+				prompt = $stdin.gets.chomp.downcase	
+			  	if prompt == 'y' || prompt == 'yes'
+			  		choosing = true
+			  		while choosing
+				  		puts "Here are the list of address files"
+						puts ""
+						list_files()
+						puts ""
+						puts "Please choose a file."
+						file_name_index = $stdin.gets.chomp
+						checking_prompt = true
+						while checking_prompt
+							checking_prompt = check_num_prompt(file_name_index)
+							if checking_prompt
+								puts "Sorry, there are no selection for #{file_name_index}"
+								list_files()
+								file_name_index = $stdin.gets.chomp
+							end
+						end
+						if !`ls ./address_files/ | grep #{get_file_name(file_name_index)}`.empty? 
+							file_name = get_file_name(file_name_index)
+							addresses = load_user_address_book( file_name )
+							user_name = get_user_name( file_name )
+							puts ""
+							puts "Welcome Back #{user_name.capitalize}!"
+							puts ""
+							choosing = false
+						else
+							puts "File does not exist...please select again"
+						end
+					end
+					checking_prompt = false
+			  	elsif prompt == 'n' || prompt == 'no'
+			  		checking_prompt = false
+			  	else
+			  		puts "Please input Yes or No. Thank you."
+			  	end
+			end
+		end 		
   		checking_prompt = false
   	else
   		puts "Please input Yes or No. Thank you."
   	end
 end
-if !`ls ./address_files/`.empty?
-	puts "Do you want to load an existing address file? (y/n)"
-	checking_prompt = true
-	while checking_prompt
-		prompt = $stdin.gets.chomp.downcase	
-	  	if prompt == 'y' || prompt == 'yes'
-	  		choosing = true
-	  		while choosing
-		  		puts "Here are the list of address files"
-				puts ""
-				list_files()
-				puts ""
-				puts "Please choose a file."
-				file_name_index = $stdin.gets.chomp
-				checking_prompt = true
-				while checking_prompt
-					checking_prompt = check_num_prompt(file_name_index)
-					if checking_prompt
-						puts "Sorry, there are no selection for #{file_name_index}"
-						list_files()
-						file_name_index = $stdin.gets.chomp
-					end
-				end
-				if !`ls ./address_files/ | grep #{get_file_name(file_name_index)}`.empty? 
-					file_name = get_file_name(file_name_index)
-					addresses = load_user_address_book( file_name )
-					user_name = get_user_name( file_name )
-					puts ""
-					puts "Welcome Back #{user_name.capitalize}!"
-					puts ""
-					choosing = false
-				else
-					puts "File does not exist...please select again"
-				end
-			end
-			checking_prompt = false
-	  	elsif prompt == 'n' || prompt == 'no'
-	  		checking_prompt = false
-	  	else
-	  		puts "Please input Yes or No. Thank you."
-	  	end
-	end
-end
+
 # Always run until user quits (setting is_running? to false)
 is_running = true
 while is_running
@@ -347,11 +391,26 @@ while is_running
 	elsif prompt == "4"
 		puts "Closing Address Book Application..."
 		if !user_name.empty?
-			puts "Saving Address Book..."
-			puts user_name
-			File.open("./address_files/#{user_name}-address_book.json","w") do |f|
-		  		f.write(addresses.to_json)
+			save_address_book(user_name, addresses)
+		else
+			puts "I noticed you did not input a user name."
+			puts "Do you want to save this address?"
+			prompt_decision = $stdin.gets.chomp
+			if prompt_decision.downcase == "y" || prompt_decision.downcase == "yes"
+				puts "Input User name please: "
+				user_name = $stdin.gets.chomp
+				save_address_book(user_name)
+				deciding = false
+				puts "See you later #{user_name}"
+			elsif prompt_decision.downcase == "n" || prompt_decision.downcase == "no"
+				puts "Address book deleted, closing application...GoodBye."
+				puts "See you later Unknown Person"
+				deciding = false
+			else
+				puts "You selected #{prompt}, unfortunately this is an invalid selection."
+				puts "Try y/n/yes/no"
 			end
+
 		end
 		is_running = false
 	else
