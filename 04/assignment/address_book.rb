@@ -1,15 +1,37 @@
 require 'json'
 
 def load_user_address_book( filename )
+  ### Note: It's more idiomatic in Ruby to open files using
+  ###       the File class rather than the IO class.
+  ###       Additionally, using a block will ensure that Ruby
+  ###       closes the file after you finish reading it.  For
+  ###       example:
+  ###
+  ###         File.open("./address_files/#{filename}") do |fin|
+  ###           # fin will be closed as soon as the block exits
+  ###           return JSON.parse(fin.read)
+  ###         end
+  ###
   JSON.parse( IO.read("./address_files/#{filename}") )
 end
 
 def get_user_name( filename )
+  ### TIP: The Ruby approach to obtaining the contents
+  ###      of a directory is:
+  ###
+  ###        the_files = Dir['./address_files/*']
+  ###
+  ###      You can then use the #find method to find
+  ###      the file that you want:
+  ###
+  ###        file = the_files.find{|f| f.include? filename }
+  ###
 	file = `ls ./address_files | grep #{filename}`.chomp
 	user_name = file.split('-')[0].strip
 end
 
 def list_files
+  ### See the note above about using the Dir[...] method.
 	list_of_files = `ls ./address_files/`.split("\n")
 	index = 0
 	list_of_files.each do |file|
@@ -24,6 +46,7 @@ def get_file_name(index)
 end
 
 def display_application_header
+  ### LOL: "Brought to you by Michael Dere"?  Nice!
 	puts "#####################################"
 	puts "### Welcome to The Address Finder ###"
 	puts "#####################################"
@@ -42,9 +65,18 @@ def display_menu
 end
 # checking prompt
 def check_num_prompt(prompt)
+  ### Very good way to check that the input is an Integer.
 	regex_check = /^[0-9]+$/
 	if regex_check.match(prompt).nil?
+    ### Thought: This 'puts' statement probably should be handled
+    ###          by the code that called this method.  Why?
+    ###          Because we can't be sure that it is always
+    ###          appropriate to print this message.  For example:
+    ###          what if you are validating data that you read
+    ###          from a file?
 		puts "Please choose a number"
+
+
 		true
 	else
 		false
@@ -52,6 +84,10 @@ def check_num_prompt(prompt)
 end
 
 def create_entry(first_name, last_name, phone_number, addresses)
+  ### Note: It's more idiomatic to use Symbols as keys rather
+  ###       than Strings:
+  ###
+  ###         hash = {first_name: first_name, ...}
 	hash = {'first_name' => first_name, 
 			'last_name' => last_name, 
 			'phone_number' => phone_number
@@ -68,6 +104,13 @@ def create_entry(first_name, last_name, phone_number, addresses)
   		puts ""
   		puts "Adding #{email_prompt}"
   		puts ""
+
+      ### Note: Consider refactoring your code so that
+      ###       hash[:emails] points to an Array of emails.
+      ###       That way, adding emails becomes as simple as:
+      ###
+      ###         hash[:emails].push email_prompt
+      ###
   		hash["email_#{i}"] = email_prompt
   		i += 1
   	elsif prompt == 'n' || prompt == 'no'
@@ -87,6 +130,8 @@ def display_update_entry(address_index, address_list)
 	puts "[3] Phone Number?"
 	i = 1
 	working_index.keys.each do |key|
+    ### See note above about creating an :emails Array.
+    ### That would eliminate the need for this key name check.
 		if key.include? "email"
 			puts "[#{3 + i}] #{key.capitalize}?"
 			i += 1
@@ -96,13 +141,26 @@ end
 
 def update_entry(address_index, address_list)
 	working_index = address_list[address_index]
+
+
+  ### Thought: Users will probably want to have an opportunity
+  ###          to do this for entries that already have at least
+  ###          one e-mail as well.  So, eliminate the conditional?
 	if !working_index.keys.any? { |s| s.include?('email') }
 		puts "No email detected, do you want to add one?"
 		deciding = true
 		i = 1
+
+    ### Refactor: This loop looks very similar to the 'add emails'
+    ###           code when creating a new entry.  This suggests
+    ###           that this code should be moved into a method
+    ###           so that it can be reused in both places.
 		while deciding
 			prompt = $stdin.gets.chomp				
 			if prompt == 'y' || prompt == 'yes'
+          ### Refactor: Move the body of this conditional
+          ###           into a separate method to improve
+          ###           overall readability.
 		  		puts "Enter email address, please."
 		  		email_prompt = $stdin.gets.chomp
 		  		puts ""
@@ -118,7 +176,9 @@ def update_entry(address_index, address_list)
 		  		puts "Invalid, please try again."
 		  	end	
 	 	end	
-	 end
+	end
+
+
 	display_update_entry(address_index, address_list)
 	updating = true
 	while updating
@@ -128,6 +188,9 @@ def update_entry(address_index, address_list)
 			checking_prompt = check_num_prompt(prompt)
 			if checking_prompt
 				puts "Please choose the correct value."
+
+        ### Thought: you could actually call '.to_i' here
+        ###          to avoid calling it repeatedly down below.
 				prompt = $stdin.gets.chomp
 			end
 		end
@@ -150,6 +213,8 @@ def update_entry(address_index, address_list)
 			working_index['phone_number'] = phone_number
 			puts "Updated Phone Number!"		
 		elsif prompt.to_i > 3
+      ### Note: what if i = 100, and the entry only had 2 emails?
+
 			puts "Updating Email #{prompt}..."
 			puts "Input new email address."
 			email = $stdin.gets.chomp
@@ -161,6 +226,9 @@ def update_entry(address_index, address_list)
 		puts "Want to update another parameter?"
 		prompt_dec = $stdin.gets.chomp
 		if prompt_dec == 'y' || prompt_dec == 'yes'
+      ### Note: It looks like you're looping by calling the
+      ###       same method recursively.  Can you achieve the
+      ###       same behavior by using a 'while' loop?
 			display_update_entry(address_index, address_list)
 		elsif prompt_dec == 'n' || prompt_dec == 'no'
 			puts "Returning to the Menu."
@@ -172,7 +240,11 @@ def update_entry(address_index, address_list)
 end
 
 def display_entries(addresses)
+
 	addresses.sort! do |a,b|
+    ### Bug fix: The <=> operator always returns an Integer,
+    ###          which will always be truthy.  Therefore, the
+    ###          expression below will always be true:
 	  (a['first_name'] <=> b['first_name']) &&
 	  (a['last_name'] <=> b['last_name'])
 	end
@@ -204,6 +276,8 @@ end
 
 def save_address_book(user, addresses)
 	puts "Saving Address Book..."
+  ### Exactly!  Using File.open, and writing the file
+  ### inside the block.
 	File.open("./address_files/#{user}-address_book.json","w") do |f|
   		f.write(addresses.to_json)
 	end
