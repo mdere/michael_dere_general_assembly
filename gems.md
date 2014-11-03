@@ -60,23 +60,16 @@ Motivation: Show how IRB output sucks for arrays and hashes.
 Create an array, and a 'me' hash:
 
 ```ruby
- me = {:name=>"adam", :last=>"bray", :email=>"adam.bray@gmail.com", :interests=>["long walks on the beach", "reading bromance novels", "knitting"]}
+ me = {:name=>"adam", :last=>"bray", :email=>"adam.bray@ga.co", :interests=>["long walks on the beach", "kittens playing with string", "scandinavian heavy metal"]}
 ```
 
 
-### I do - Code-Along
+### Using a Gem - Code-Along
 
 Install the awesome_print gem.
 
-Demonstrate how to require the gem, and show that it works.
-
-### We Do
-
-Explore $LOAD_PATH:
-
-1)  
-
-### You Do
+* Demonstrate how to require the gem, and show that it works.
+* Demonstrate how $LOAD_PATH changes.
 
 ## Resources
 

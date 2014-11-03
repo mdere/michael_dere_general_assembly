@@ -8,7 +8,7 @@
   persistent storage mechanisms
 * Explain the difference between a database management system (R/DBMS) and a
   database, and name the major DBMSes
-* Convert an ERD into a DB schema and load it into SQLite3
+* Convert an ERD into a schema and load it into SQLite3
 
 ## Framing (5 minutes)
 
