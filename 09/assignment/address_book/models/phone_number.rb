@@ -26,16 +26,15 @@ class PhoneNumber < ActiveRecord::Base
     end
 	end
 
-  def self.delete_all(address_entries, email_entries)
-    if email_entries.present?
-      email_entries.each do |entry|
-        entry.address_entry.phone_number.destroy_all
+  def self.delete_all(address_entries)
+    begin
+      all_entry_phone_numbers = address_entries.phone_number
+      all_entry_phone_numbers.each do |entry|
+        entry.destroy
       end
-    end
-    if address_entries.present?
-      address_entries.each do |entry|
-        entry.phone_number.destroy_all
-      end
+    rescue => e 
+      puts "Could not delete all Emails"
+      puts "Following error message for investigation: #{e.message}"
     end
   end
 
@@ -50,7 +49,7 @@ class PhoneNumber < ActiveRecord::Base
     	puts "Phone Numbers:"
     	index = 0
     	list.each do |phone|
-    		puts "  [#{index}]  :  #{phone.phone_number}"
+    		puts "  [#{index}] : #{phone.category} :  #{phone.phone_number}"
     		index += 1
     	end
     else

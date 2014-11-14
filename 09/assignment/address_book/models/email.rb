@@ -26,16 +26,15 @@ class Email < ActiveRecord::Base
 	  end
 	end
 
-	def self.delete_all(address_entries, email_entries)
-		if email_entries.present?
-			email_entries.each do |entry|
-				entry.destroy_all
+	def self.delete_all(address_entries)
+		begin
+			all_entry_emails = address_entries.email
+			all_entry_emails.each do |entry|
+				entry.destroy
 			end
-		end
-		if address_entries.present?
-			address_entries.each do |entry|
-				entry.email.destroy_all
-			end
+		rescue => e 
+			puts "Could not delete all Emails"
+			puts "Following error message for investigation: #{e.message}"
 		end
 	end
 
@@ -50,7 +49,7 @@ class Email < ActiveRecord::Base
     	puts "Emails:"
     	index = 0
     	list.each do |email|
-    		puts "  [#{index}]  :  #{email.email_address}"
+    		puts "  [#{index}] : #{email.category} :  #{email.email_address}"
     		index += 1
     	end
     else
@@ -58,12 +57,12 @@ class Email < ActiveRecord::Base
     end	
 	end
 
-	def self.list_emails(entry, index)
-    if entry.present?
-    	puts "Emails:"
-    	puts "  [#{index}]  :  #{entry.email_address}"
-    else
-    	puts "No Emails listed..."
-    end
-	end
+	# def self.list_emails(entry, index)
+ #    if entry.present?
+ #    	puts "Emails:"
+ #    	puts "  [#{index}]  :  #{entry.email_address}"
+ #    else
+ #    	puts "No Emails listed..."
+ #    end
+ # end
 end

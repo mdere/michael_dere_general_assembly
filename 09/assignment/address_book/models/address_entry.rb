@@ -63,7 +63,7 @@ class AddressEntry < ActiveRecord::Base
       puts ""
       if list_of_addresses.present?
         if AddressEntry.confirmation_return("Do you want to delete all these entries? (y/n): ")
-          AddressEntry.delete_all(list_of_addresses, nil)
+          AddressEntry.delete_all(list_of_addresses)
         else
           print "Pick Address Index to delete: "
           prompt = AddressEntry.num_confirmation_check($stdin.gets.chomp).to_i
@@ -78,7 +78,7 @@ class AddressEntry < ActiveRecord::Base
       list_of_addresses = AddressEntry.get_by_first_name(user_id, 1)
       if list_of_addresses.present?       
         if AddressEntry.confirmation_return("Do you want to delete all these entries? (y/n): ")
-          AddressEntry.delete_all(list_of_addresses, nil)
+          AddressEntry.delete_all(list_of_addresses)
         else
           print "Pick Address Index to delete: "
           prompt = AddressEntry.num_confirmation_check($stdin.gets.chomp).to_i
@@ -93,7 +93,7 @@ class AddressEntry < ActiveRecord::Base
       list_of_addresses = AddressEntry.get_by_email_address(user_id, 1)
       if list_of_addresses.present?
         if AddressEntry.confirmation_return("Do you want to delete all these entries? (y/n): ")
-          AddressEntry.delete_all(nil, list_of_addresses)
+          AddressEntry.delete_all(list_of_addresses)
         else
           print "Pick Address Index to delete: "
           prompt = AddressEntry.num_confirmation_check($stdin.gets.chomp).to_i
@@ -108,28 +108,23 @@ class AddressEntry < ActiveRecord::Base
     end  
   end
 
-  def self.delete_all(address_entry, email_entry)
-    if address_entry.present?
-      puts "Deleted #{address_entry.count} Address Entries..."
-      Email.delete_all(address_entry, email_entry)
-      PhoneNumber.delete_all(address_entry, email_entry)       
+  def self.delete_all(address_entry)
+    begin
+      count = address_entry.count
+      Email.delete_all(address_entry)
+      PhoneNumber.delete_all(address_entry)       
       address_entry.destroy_all
-    elsif email_entry.present?
-      index = 0
-      email_entry.each do |entry|
-        entry.address_entry.phone_number.destroy  
-        entry.address_entry.destroy
-        entry.destroy
-        index += 1
-      end
-      puts "Deleted #{index} Address Entries..."      
-    end  
+      puts "Deleted #{count} Address Entries..."      
+    rescue => e
+      puts "Can not delete this Address Entry..."
+      puts "Following error message for investigation: #{e.message}"
+    end
   end
 
   def self.check_prompt_deletion(prompt)
     checking = true
     while checking
-      if AddressEntry.find(prompt).present?
+      if AddressEntry.where("id = ?", prompt).present?
         checking = false
       else
         puts "Address Index #{prompt} does not exist..."
@@ -160,7 +155,7 @@ class AddressEntry < ActiveRecord::Base
     puts "Searching entries by Last Name"
     print "Enter Search string: "
     last_name_search = $stdin.gets.chomp
-    list_by_last_name = AddressEntry.where("user_id = ? and last_name like ?", user_id, "%#{last_name_search.downcase}%")
+    list_by_last_name = AddressEntry.where("user_id = ? and last_name like ?", user_id, "%#{last_name_search.downcase}%").order(:last_name)
     puts ""
     puts "Found #{list_by_last_name.count} matches!"
     puts ""
@@ -181,7 +176,7 @@ class AddressEntry < ActiveRecord::Base
     puts "Searching entries by First Name"
     print "Enter Search string: "
     first_name_search = $stdin.gets.chomp
-    list_by_first_name = AddressEntry.where("user_id = ? and first_name like ?", user_id, "%#{first_name_search.downcase}%")
+    list_by_first_name = AddressEntry.where("user_id = ? and first_name like ?", user_id, "%#{first_name_search.downcase}%").order(:first_name)
     puts ""
     puts "Found #{list_by_first_name.count} matches!"
     puts ""
@@ -202,19 +197,25 @@ class AddressEntry < ActiveRecord::Base
     puts "Searching entries by Email"
     print "Enter Search string: "
     email_search = $stdin.gets.chomp
-    list_by_email = Email.where("user_id = ? and email_address like ?", user_id, "%#{email_search.downcase}%")
-    puts list_by_email.inspect
+    unique_email_address_indexes = Email.where("user_id = ? and email_address like ?", user_id, "%#{email_search.downcase}%").select(:address_entry_id).distinct
+    array_of_indexes = []
+    unique_email_address_indexes.each do |unique|
+      array_of_indexes.push unique.address_entry_id
+    end
+    list_by_email = AddressEntry.where("id in (?)", array_of_indexes)
     puts ""
     puts "Found #{list_by_email.count} matches!"
     puts ""
     index = 0
-    list_by_email.each do |entry|
-      puts "-- Address Index [#{entry.address_entry.id}] --"     
-      entry.address_entry.list_full_name
-      PhoneNumber.list_phone_numbers(entry)
-      Email.list_emails(entry, index)
-      index += 1
-      puts "==============================="
+    if list_by_email.any?
+      list_by_email.each do |entry|
+        puts "-- Address Index [#{entry.id}] --"     
+        entry.list_full_name
+        PhoneNumber.list_phone_numbers(entry)
+        Email.list_emails_from_address_entry(entry)
+        index += 1
+        puts "==============================="
+      end
     end
     # returns list_by_email for deletion purposes only.
     if delete == 1

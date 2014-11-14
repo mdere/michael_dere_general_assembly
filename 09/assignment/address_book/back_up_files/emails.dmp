@@ -1,0 +1,5 @@
+id,address_entry_id,email_address,category,user_id
+1,1,bob.bobber@work.com,work,1
+2,1,bob.bobber@personal.com,personal,1
+3,2,michael.dere@work.com,work,2
+4,2,michael.dere@personal.com,personal,2

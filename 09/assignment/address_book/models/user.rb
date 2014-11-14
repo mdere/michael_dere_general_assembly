@@ -11,8 +11,13 @@ class User < ActiveRecord::Base
 		puts "" 
 	end
 
+	# TODO - add logic to make user create new user if no user exists.
+
 	def self.start_login
-	  if AddressEntry.confirmation_return("Do you want to create a new User? (y/n): ")
+		if !User.all.present?
+			puts "No Active Users, please create a user to begin..."
+			User.create_user
+	  elsif AddressEntry.confirmation_return("Do you want to create a new User? (y/n): ")
 			User.create_user
 			creating_another = true		
 			while creating_another
