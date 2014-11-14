@@ -11,4 +11,5 @@
       <li>You may create more after quiting, by selecting the quit application option</li>
       <li>Then do not logg off completely, by selecting inputing "no"</li>
     </ul>
+  <li>Then Enjoy!!</li>
 </ul>
