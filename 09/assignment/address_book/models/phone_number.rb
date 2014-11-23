@@ -26,6 +26,19 @@ class PhoneNumber < ActiveRecord::Base
     end
 	end
 
+  ### Pro-tip: It looks like you are trying to
+  ###          delete all of the phone numbers
+  ###          associated w/ an entry before
+  ###          deleting the entry.  Consider
+  ###          marking the association as
+  ###          dependent:
+  ###
+  ###            http://stackoverflow.com/questions/1896777/cascade-delete-in-ruby-activerecord-models
+  ###            http://guides.rubyonrails.org/association_basics.html
+  ###
+  ###          This will cause all "dependent"
+  ###          models to be deleted automatically
+  ###          when the "owner" is deleted.
   def self.delete_all(address_entries)
     begin
       all_entry_phone_numbers = address_entries.phone_number
@@ -44,6 +57,10 @@ class PhoneNumber < ActiveRecord::Base
 	end
 
 	def self.list_phone_numbers(address_entry)
+    ### Note: Why not just do this?
+    ###
+    ###         list = address_entry.phone_numbers
+    ###
     list = PhoneNumber.where("address_entry_id = ?", address_entry.id)
     if list.any?
     	puts "Phone Numbers:"
