@@ -1,1 +1,9 @@
-<h1> Dashboard Page </h1>
+<h1> Welcome to Bartini, <%= "#{@user}" %></h1>
+
+<ul>
+	<% @list_of_drinks.each do |i| %>
+		<li> <%= i.drink_name %> </li>
+	<% end %>
+</ul>
+
+<%= link_to 'Create Drink', prepare_drink_path %>

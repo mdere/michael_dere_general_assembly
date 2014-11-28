@@ -1,9 +1,9 @@
 class CreateDrinkIngredient < ActiveRecord::Migration
   def change
     create_table :drink_ingredients do |t|
-    	t.integer :drink_id, :null => false
-    	t.integer :ingredient_id, :null => false
-    	t.integer :quantity, :null => false
+    	t.integer :drink_id 
+    	t.integer :ingredient_id 
+    	t.integer :quantity 
     end
   end
 end

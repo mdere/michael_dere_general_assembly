@@ -11,29 +11,29 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141125142837) do
+ActiveRecord::Schema.define(version: 20141127020041) do
 
   create_table "drink_ingredients", force: true do |t|
-    t.integer "drink_id",      null: false
-    t.integer "ingredient_id", null: false
-    t.integer "quantity",      null: false
+    t.integer "drink_id"
+    t.integer "ingredient_id"
+    t.integer "quantity"
   end
 
   create_table "drinks", force: true do |t|
-    t.string  "drink_name",      null: false
-    t.integer "user_account_id", null: false
-    t.integer "recipe_id",       null: false
-    t.boolean "private",         null: false
+    t.string  "drink_name"
+    t.integer "user_account_id"
+    t.integer "recipe_id"
+    t.boolean "visibility"
   end
 
   create_table "ingredients", force: true do |t|
-    t.string  "ingredient_name", null: false
-    t.integer "weight_type_id",  null: false
+    t.string  "ingredient_name"
+    t.integer "weight_type_id"
   end
 
   create_table "recipes", force: true do |t|
-    t.integer "drink_id",      null: false
-    t.integer "step_id",       null: false
+    t.integer "drink_id"
+    t.integer "step_id"
     t.integer "ingredient_id"
   end
 
@@ -45,39 +45,40 @@ ActiveRecord::Schema.define(version: 20141125142837) do
   end
 
   create_table "service_statuses", force: true do |t|
-    t.string "status", null: false
-    t.string "tier",   null: false
+    t.string "status"
+    t.string "tier"
   end
 
   create_table "steps", force: true do |t|
-    t.string "step_description", null: false
+    t.string "step_description"
   end
 
   create_table "user_accounts", force: true do |t|
-    t.string "first_name", null: false
-    t.string "last_name",  null: false
-    t.string "email",      null: false
-    t.string "user_name",  null: false
+    t.string "first_name"
+    t.string "last_name"
+    t.string "email"
+    t.string "user_name"
+    t.string "password"
   end
 
   create_table "user_drink_libraries", force: true do |t|
-    t.integer "user_account_id", null: false
-    t.integer "drink_id",        null: false
+    t.integer "user_account_id"
+    t.integer "drink_id"
   end
 
   create_table "venue_accounts", force: true do |t|
-    t.string  "venue_name",       null: false
-    t.integer "servie_status_id", null: false
-    t.integer "user_account_id",  null: false
+    t.string  "venue_name"
+    t.integer "servie_status_id"
+    t.integer "user_account_id"
   end
 
   create_table "venue_drink_libraries", force: true do |t|
-    t.integer "bar_id",   null: false
-    t.integer "drink_id", null: false
+    t.integer "bar_id"
+    t.integer "drink_id"
   end
 
   create_table "venue_locations", force: true do |t|
-    t.integer "bar_id",         null: false
+    t.integer "bar_id"
     t.integer "address_number"
     t.string  "address_street"
     t.string  "city"
@@ -87,8 +88,8 @@ ActiveRecord::Schema.define(version: 20141125142837) do
   end
 
   create_table "weight_types", force: true do |t|
-    t.string "type_of_weight", null: false
-    t.string "measure_type",   null: false
+    t.string "type_of_weight"
+    t.string "measure_type"
   end
 
 end

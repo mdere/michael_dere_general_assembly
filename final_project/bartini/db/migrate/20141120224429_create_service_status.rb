@@ -1,8 +1,8 @@
 class CreateServiceStatus < ActiveRecord::Migration
   def change
     create_table :service_statuses do |t|
-    	t.string :status, :null => false
-    	t.string :tier, :null => false
+    	t.string :status 
+    	t.string :tier 
     end
   end
 end

@@ -1,22 +1,18 @@
 <h1> Drink Creation </h1>
 
-<%= form_tag url_for('prepare_ingredients_path'), :method => 'put' do %>
+<%= form_tag url_for('prepare_ingredients'), :method => 'post' do %>
         <div>
             <%= label_tag :drink_name %>
             <%= text_field_tag :drink_name %>
         </div>
         <div>
-			<%= radio_button_tag(:private, "true") %>
-			<%= label_tag(:private_true, "I want my drink to be Private.") %>
+			<%= radio_button_tag(:visibility, "true") %>
+			<%= label_tag(:visibility_true, "I want my drink to be Private.") %>
 		</div>
 		<div>
-			<%= radio_button_tag(:private, "false") %>
-			<%= label_tag(:private_false, "I want to share this drink.") %>
+			<%= radio_button_tag(:visibility, "false") %>
+			<%= label_tag(:visibility_false, "I want to share this drink.") %>
         </div>
-        <div>
-        	<h3> Add Ingredients </h3>
-        	<%= select_tag @ingredients, options_from_collection_for_select(@ingredients, "id", "ingredient_name"), { :multiple => true, :size =>10 } %>
-    	</div>	
 
         <%= submit_tag("Proceed to Creation!") %>
 

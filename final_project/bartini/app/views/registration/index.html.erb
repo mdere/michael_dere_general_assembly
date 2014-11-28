@@ -1,3 +1,26 @@
-<%= form_tag do %>
+<h1>Registration</h1>
 
+<%= form_tag url_for('create_user'), :method => 'post' do %>
+	<div>
+		<%= label_tag :first_name %>
+		<%= text_field_tag :first_name %>
+	</div>
+	<div>
+		<%= label_tag :last_name%>
+		<%= text_field_tag :last_name %>
+	</div>
+	<div>
+		<%= label_tag :email%>
+		<%= text_field_tag :email %>
+	</div>
+	<div>
+		<%= label_tag :user_name%>
+		<%= text_field_tag :user_name %>
+	</div>
+	<div>
+		<%= label_tag :password%>
+		<%= text_field_tag :password %>
+	</div>
+
+	<%= submit_tag("Register") %>
 <% end %>

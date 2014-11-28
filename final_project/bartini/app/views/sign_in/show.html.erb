@@ -1,0 +1,16 @@
+<h1>Welcome to Bartini</h1>
+
+<%= form_tag url_for('dashboard/sign_in'), :method => 'post' do %>
+	<div>
+		<%= label_tag :user_name %>
+    	<%= text_field_tag :user_name %>
+	</div>
+	<div>
+		<%= label_tag :password %>
+    	<%= text_field_tag :password %>
+	</div>
+
+	<%= submit_tag "Sign In" %>
+<% end %>
+
+<%= link_to 'Registration', registration_page_path %>

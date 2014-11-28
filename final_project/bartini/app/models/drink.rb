@@ -3,7 +3,7 @@ class Drink < ActiveRecord::Base
 	has_many :recipes
   has_and_belongs_to_many :ingredients
 
-	def create_drink(user_id, drink_name,)
+	def create_drink(user_id, drink_name)
     #Drink.create
 	end
 
