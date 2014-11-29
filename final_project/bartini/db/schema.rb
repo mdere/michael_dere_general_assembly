@@ -58,7 +58,8 @@ ActiveRecord::Schema.define(version: 20141127020041) do
     t.string "last_name"
     t.string "email"
     t.string "user_name"
-    t.string "password"
+    t.string "password_hash"
+    t.string "password_salt"
   end
 
   create_table "user_drink_libraries", force: true do |t|

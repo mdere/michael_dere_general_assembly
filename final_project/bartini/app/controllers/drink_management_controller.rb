@@ -1,6 +1,6 @@
 class DrinkManagementController < ApplicationController
   def prepare_drink
-    @user = UserAccount.find(1)
+    @user = UserAccount.find(params[:id])
   end
 
   def prepare_ingredients

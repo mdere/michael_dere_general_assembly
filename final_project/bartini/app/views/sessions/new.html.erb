@@ -1,0 +1,16 @@
+<h1>Welcome to Bartini</h1>
+
+<%= form_tag sessions_path do %>
+	<div>
+		<%= label_tag :user_name %>
+    	<%= text_field_tag :user_name %>
+	</div>
+	<div>
+		<%= label_tag :password %>
+    	<%= text_field_tag :password %>
+	</div>
+
+	<p class="button"><%= submit_tag "Log in" %></p>
+<% end %>
+
+<%= link_to 'Registration', register_path %>

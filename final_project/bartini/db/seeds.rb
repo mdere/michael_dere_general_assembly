@@ -7,7 +7,7 @@
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
 # Dummy User
-UserAccount.create(first_name: "test_first_name", last_name: "test_last_name", email: "test_email", user_name: "test")
+UserAccount.create(first_name: "test_first_name", last_name: "test_last_name", email: "test_email", user_name: "test", password: "1234")
 # Populating Weight Type
 floz = WeightType.create(type_of_weight: "liquid", measure_type: "fl-oz")
 units = WeightType.create(type_of_weight: "solid", measure_type: "unit")
