@@ -1,4 +1,6 @@
 class Ingredient < ActiveRecord::Base
-  has_and_belongs_to_many :drinks
+  belongs_to :weight_type
+  has_many :drink_associations
+  has_many :drinks, :through => :drink_associations
 
 end

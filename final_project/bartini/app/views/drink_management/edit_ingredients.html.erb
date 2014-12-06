@@ -1,0 +1,31 @@
+<h1> Editing Ingredients for <%= @new_drink.drink_name %></h1>
+
+<%= render partial: 'update_description', locals: {new_drink: @new_drink} %>
+<%= render partial: 'add_ingredients', locals: {new_drink: @new_drink} %>
+<ul>
+	<li>
+		<h3> Unassociated Ingredient with step </h3>
+		<%= render partial: 'edit_ingredients_row', locals: {ingredients: @list_of_unassociated_drink, new_drink: @new_drink} %>		 
+	</li>
+	<li>
+		<h3> Ingredients Mixing in with each other. </h3>
+		<%= render partial: 'edit_ingredients_row', locals: {ingredients: @list_of_mixing_ingredients, new_drink: @new_drink} %>
+	</li>	
+
+	<li>
+		<h3> Adding Ingredients after mixing. </h3>
+		<%= render partial: 'edit_ingredients_row', locals: {ingredients: @list_of_adding_after_ingredients, new_drink: @new_drink} %>
+	</li>
+
+	<li>
+		<h3> Garnish Ingredients after mixing. </h3>
+		<%= render partial: 'edit_ingredients_row', locals: {ingredients: @list_of_garnishing_ingredients, new_drink: @new_drink} %>
+	</li>
+
+	<li>
+		<h3> Coat Rim with the following Ingredients. </h3>
+		<%= render partial: 'edit_ingredients_row', locals: {ingredients: @list_of_coating_rim_ingredients, new_drink: @new_drink} %>
+	</li>
+</ul>
+
+<%= link_to "Done Editing", drink_page_path(@new_drink.user_account_id, @new_drink.id) %>

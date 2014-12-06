@@ -1,0 +1,7 @@
+<%= form_tag update_description_path do %>
+ 	<%= hidden_field_tag "drink_id", new_drink.id %>
+	<%= text_area_tag(:description, "#{new_drink.description}", size: '50x10') %>
+	<div>
+		<%= submit_tag("Update description") %>
+	</div>
+<% end %>

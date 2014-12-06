@@ -1,0 +1,28 @@
+<% if ingredients.present? %>
+	<table>
+		<% ingredients.each do |i| %>
+			<% ingredient = Ingredient.find(i.ingredient_id) %>
+			<tr> 
+				<%= form_tag save_changes_path do %>
+					
+					<%= hidden_field_tag "association_id", i.id %>
+					<%= hidden_field_tag "drink_id", new_drink.id %>
+					<td>
+						<%= collection_select :step, :step_id, Step.all, :id, :step_description, :prompt => true, :selected => i.step_id %>
+					</td>
+					<td>
+						<%= text_field_tag :quantity, "#{i.quantity}" %> <%= WeightType.find(ingredient.weight_type_id).measure_type %> of <%= ingredient.ingredient_name %> 
+					</td>
+					<td>
+						<%= submit_tag("Save Changes") %>
+					</td>
+				<% end %>
+				<td>
+					<%= link_to "Remove", remove_ingredient_path(new_drink.id, i.ingredient_id) %>
+				</td>
+			</tr>
+		<% end %>
+	</table>
+<% else %>
+	<div> No Ingredients Present. </div>
+<% end %>

@@ -1,0 +1,94 @@
+<h1><%= @drink.drink_name %></h1>
+
+<% if @data_file.present? %>
+	<%= image_tag "/assets/images/#{@data_file.original_filename}", :alt => "#{@data_file.original_filename}" %>
+<% elsif current_user.id == @drink.user_account_id %>
+	<%= form_tag upload_file_path, :multipart => true do %>
+	    <%= hidden_field_tag "drink_id", @drink.id %>
+		<p>
+			<label for="upload_file">Select File</label> : 
+			<%= file_field 'upload', 'datafile' %>
+		</p>
+		<%= submit_tag "Upload" %>
+	<% end %>
+<% end %>
+
+<% if current_user.id == @drink.user_account_id %>
+	<table> 
+		<tr>
+			<td>
+				<%= link_to "Edit Ingredients", edit_ingredients_path(@drink.id) %> 
+			</td>
+		</tr>
+	</table>
+<% end %>
+
+<p> <%= @drink.description %> </p>
+
+<ul>
+	<li>
+		<h3> Ingredients Mixing in with each other. </h3>
+		<ul>
+			<% if @list_of_mixing_ingredients.present? %>
+				<% @list_of_mixing_ingredients.each do |i| %>
+					<li> Mix <%= Ingredient.find(i.ingredient_id).ingredient_name %> in drink
+					</li>
+				<% end %>
+			<% else %>
+				<td> 
+					No ingredient's present to be mixed in.
+				</td> 
+			<% end %>
+		</ul>
+	</li>	
+
+	<li>
+		<h3> Adding Ingredients after mixing. </h3>
+		<ul>
+			<% if @list_of_adding_after_ingredients.present? %>
+				<% @list_of_adding_after_ingredients.each do |i| %>
+						<li> Pour <%= Ingredient.find(i.ingredient_id).ingredient_name %> in
+						</li>
+				<% end %>
+			<% else %> 	
+				<li> 
+					No ingredient's present to be Added in.
+				</li> 
+			<% end %>
+		</ul>
+	</li>
+
+	<li>
+		<h3> Garnish Ingredients after mixing. </h3>
+		<ul>
+			<% if @list_of_garnishing_ingredients.present? %>
+				<% @list_of_garnishing_ingredients.each do |i| %>
+						<li> Add <%= Ingredient.find(i.ingredient_id).ingredient_name %> as a garnish.
+						</li>
+				<% end %>
+			<% else %> 	
+				<li> 
+					No ingredient's present to be Added in.
+				</li> 
+			<% end %>
+		</ul>
+	</li>
+
+	<li>
+		<h3> Coat Rim with the following Ingredients. </h3>
+		<ul>
+			<% if @list_of_coating_rim_ingredients.present? %>
+				<% @list_of_coating_rim_ingredients.each do |i| %>
+						<li> Coat <%= Ingredient.find(i.ingredient_id).ingredient_name %> on rim.
+						</li>
+				<% end %>
+			<% else %> 	
+				<li> 
+					No ingredient's present to be Added in.
+				</li> 
+			<% end %>
+		</ul>
+	</li>
+</ul>
+
+<h2> Comments </h2>

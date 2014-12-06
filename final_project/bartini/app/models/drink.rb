@@ -1,14 +1,17 @@
-class Drink < ActiveRecord::Base
-	attr_accessor :drink_name, :user_id, :recipe_id, :private
-	has_many :recipes
-  has_and_belongs_to_many :ingredients
+class Drink < ActiveRecord::Base 
+  has_many :drink_associations
+  has_many :ingredients, :through => :drink_associations
 
 	def create_drink(user_id, drink_name)
     #Drink.create
 	end
 
-	def set_drink_private(drink_id, user_id)
+	def set_drink_visibility_true(drink_id, user_id)
 
 	end
+
+  def set_drink_visibility_false(drink_id, user_id)
+
+  end
 
 end

@@ -7,12 +7,20 @@
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
 # Dummy User
-UserAccount.create(first_name: "test_first_name", last_name: "test_last_name", email: "test_email", user_name: "test", password: "1234")
+UserAccount.create(first_name: "test_first_name1", last_name: "test_last_name1", email: "test_email1", user_name: "test1", password: "1234")
+UserAccount.create(first_name: "test_first_name2", last_name: "test_last_name2", email: "test_email2", user_name: "test2", password: "1234")
 # Populating Weight Type
 floz = WeightType.create(type_of_weight: "liquid", measure_type: "fl-oz")
 units = WeightType.create(type_of_weight: "solid", measure_type: "unit")
 ounces = WeightType.create(type_of_weight: "solid", measure_type: "ounces")
 grams = WeightType.create(type_of_weight: "solid", measure_type: "grams")
+
+# Populating Step Listing
+Step.create(step_description: "Mix in")
+Step.create(step_description: "Add After Mixing")
+Step.create(step_description: "Coat Rim with Ingredient")
+Step.create(step_description: "Garnish")
+
 
 # Populating Ingredient Listing
 Ingredient.create(ingredient_name: "Generic Vodka", weight_type_id: floz.id)

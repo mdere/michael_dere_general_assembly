@@ -11,30 +11,37 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141127020041) do
+ActiveRecord::Schema.define(version: 20141130202821) do
 
-  create_table "drink_ingredients", force: true do |t|
-    t.integer "drink_id"
-    t.integer "ingredient_id"
-    t.integer "quantity"
+  create_table "data_storages", force: true do |t|
+    t.string   "path"
+    t.string   "original_filename"
+    t.integer  "user_account_id"
+    t.integer  "drink_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "drink_associations", force: true do |t|
+    t.integer  "drink_id"
+    t.integer  "ingredient_id"
+    t.integer  "step_id",       default: 0
+    t.float    "quantity"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "drinks", force: true do |t|
     t.string  "drink_name"
     t.integer "user_account_id"
     t.integer "recipe_id"
+    t.text    "description"
     t.boolean "visibility"
   end
 
   create_table "ingredients", force: true do |t|
     t.string  "ingredient_name"
     t.integer "weight_type_id"
-  end
-
-  create_table "recipes", force: true do |t|
-    t.integer "drink_id"
-    t.integer "step_id"
-    t.integer "ingredient_id"
   end
 
   create_table "reviews", force: true do |t|

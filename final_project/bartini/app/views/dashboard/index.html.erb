@@ -1,9 +1,22 @@
-<h1> Welcome to Bartini, <%= "#{@user.user_name}" %></h1>
+<h1> Welcome to Bartini </h1>
 
-<ul>
+<table>
 	<% @list_of_drinks.each do |i| %>
-		<li> <%= i.drink_name %> </li>
+		<% if ( (current_user.id == i.user_account_id) && i.visibility ) || !i.visibility %>
+			<tr> 
+				<div>
+					<%= link_to "#{i.drink_name}", drink_page_path(i.id) %>
+				</div>
+				<div>
+					<% if datafile(i.id) %>
+						<%= image_tag "/assets/images/#{datafile(i.id).original_filename}", :alt => "#{datafile(i.id).original_filename}" %>
+					<% else %>
+						<%= image_tag "/assets/images/static_drink.jpg", :alt => "static_drink.jpg" %>
+					<% end %>
+				</div>
+			</tr>
+		<% end %>
 	<% end %>
-</ul>
+</table>
 
 <%= link_to 'Create Drink', prepare_drink_path %>
