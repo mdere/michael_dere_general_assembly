@@ -3,8 +3,12 @@ require_relative 'email'
 require_relative 'phone_number'
 
 class AddressEntry < ActiveRecord::Base
+  ### FIXME: Should be plural  (phone_numbers)
   has_many :phone_number
+
+  ### FIXME: Should be plural  (emails)
   has_many :email
+
   belongs_to :user
   def self.display_address_menu
     puts "==============================="
@@ -223,6 +227,11 @@ class AddressEntry < ActiveRecord::Base
     end
   end
 
+
+  ### Style: This method is very generic, and really
+  ###        does not relate directly to models.
+  ###        it should be extracted into a separate
+  ###        file / library.
   def self.num_confirmation_check(prompt)
     checking = true
     regex_check = /^[0-9]+$/    
@@ -237,6 +246,11 @@ class AddressEntry < ActiveRecord::Base
     prompt
   end
 
+
+  ### Style: This method is very generic, and really
+  ###        does not relate directly to models.
+  ###        it should be extracted into a separate
+  ###        file / library.
   def self.confirmation_check(prompt)
   	regex = /y|yes|n|no/
   	checking_prompt = true
@@ -252,6 +266,10 @@ class AddressEntry < ActiveRecord::Base
     prompt
   end
 
+  ### Style: This method is very generic, and really
+  ###        does not relate directly to models.
+  ###        it should be extracted into a separate
+  ###        file / library.
   def self.confirmation_return(message)
     print message
     prompt = AddressEntry.confirmation_check($stdin.gets.chomp)

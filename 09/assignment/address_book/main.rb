@@ -1,6 +1,8 @@
 require_relative 'models'
 require_relative 'connect'
 require 'pry'
+
+### Oops: Debug code.
 binding.pry
 
 # Choosing Username / Creating Username
